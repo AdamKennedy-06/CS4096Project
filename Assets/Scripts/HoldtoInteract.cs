@@ -8,6 +8,8 @@ public class HoldToInteract : MonoBehaviour
 {
     public GameObject interactionCanvas;
     public Image progressCircleImage;
+    public string levelToLoad; 
+
 
     void Start()
     {
@@ -30,7 +32,7 @@ public class HoldToInteract : MonoBehaviour
           
             if (progressCircleImage.fillAmount >= 1f)
             {
-                SceneManager.LoadScene("tutorial");
+                SceneManager.LoadScene(levelToLoad);
             }
         }
     }
