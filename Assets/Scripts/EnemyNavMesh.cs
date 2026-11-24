@@ -8,9 +8,9 @@ public class EnemyNavMesh : MonoBehaviour
 {
     public int currentCornerIndex = 0;
     public float MovementSpeed = 2.5f;
-    private Vector3 destination;
     private NavMeshPath myCustomPath;
     [SerializeField] private Transform movePosition;
+    public float TurnSpeed = 180f;
 
 
     // Start is called before the first frame update
@@ -35,13 +35,15 @@ public class EnemyNavMesh : MonoBehaviour
 
         Vector3 patrolTarget = myCustomPath.corners[currentCornerIndex];
 
+//Movement
         float maxDistanceDelta = MovementSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, patrolTarget, maxDistanceDelta);
 
         if ((Vector3.Distance(transform.position, patrolTarget) < 0.2)){
             currentCornerIndex++;
-        } 
-        
+        }
+//Rotate
+        RotationCheck(patrolTarget);
 
 
         for (int i = 0;  i < myCustomPath.corners.Length - 1; i++){
@@ -68,6 +70,21 @@ public class EnemyNavMesh : MonoBehaviour
                 Debug.Log("Path is Incomplete.");
                 break;
         }
+
+    }
+
+    public void RotationCheck(Vector3 targetposition)
+    {
+        Vector3 direction = targetposition - transform.position;
+        direction.y = 0;
+
+        if(direction.sqrMagnitude > 0.001)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, TurnSpeed * Time.deltaTime);
+
+        }
+       
 
     }
 }
