@@ -6309,7 +6309,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCornerIndex: 0
   MovementSpeed: 2.5
-  movePosition: {fileID: 507716445}
   TurnSpeed: 180
 --- !u!114 &1656413609
 MonoBehaviour:
@@ -6326,6 +6325,7 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 507716445}
   - {fileID: 488775304}
+  waitDuration: 8
 --- !u!1 &1697326715 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4738f19dd27cba949bf1627ab0a7baa1, type: 3}
