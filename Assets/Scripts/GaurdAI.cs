@@ -15,6 +15,13 @@ public class GaurdAI : MonoBehaviour
     private GameObject player;
     private Transform playerPos;
     private bool visable = false;
+    enum EnemyState
+    {
+        Patrol,
+        Chase
+    }
+
+    EnemyState currentState = EnemyState.Patrol;
     void Awake()
     {
         moveScript = GetComponent<EnemyNavMesh>();
@@ -63,36 +70,54 @@ public class GaurdAI : MonoBehaviour
 
         visable = newAnswer;
 
-        if (isWaiting)
+        //Drawing line for Sight Testing
+        Color coneColour;
+        if(visable == true)
         {
-            waitTimer -= Time.deltaTime;
-            if (waitTimer <= 0f)
-            {
-                isWaiting = false;
-                whichPatrolPoint = (whichPatrolPoint + 1) % patrolPoints.Length;
-                moveScript.RouteCalculator(patrolPoints[whichPatrolPoint].position);
-            }
-            return;
+            coneColour = Color.green;
+        } else {
+            coneColour = Color.red;
         }
-
-        if (patrolPoints.Length == 0)
-        {
-            return;
-        }
-
-        if (moveScript.HasFinishedPath() == true)
-        {
-            StartWaiting();
-        }
-
-
        
-            
 
-       
-      
-        
+        Vector3 startPoint = transform.position + Vector3.up * 1.4f;
+        Vector3 lengDist = transform.forward * viewDistance;
+        Debug.DrawRay(startPoint, lengDist, coneColour);
+
+        Quaternion rightAngleView = Quaternion.AngleAxis(halfViewAngle, Vector3.up);
+        Vector3 rightAngleLine = rightAngleView * transform.forward;
+        Debug.DrawRay(startPoint, rightAngleLine * viewDistance, coneColour);
+
+        Quaternion leftAngleView = Quaternion.AngleAxis(-halfViewAngle, Vector3.up);
+        Vector3 leftAngleLine = leftAngleView * transform.forward;
+        Debug.DrawRay(startPoint, leftAngleLine * viewDistance, coneColour);
+
+        switch (currentState)
+        {
+            case EnemyState.Patrol:
+                PatrolUpdate();
+                break;
+
+            case EnemyState.Chase:
+               
+                break;
+
+            /*case EnemyState.Attack:
                 
+                break; */
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -117,5 +142,32 @@ public class GaurdAI : MonoBehaviour
         return true;
 
     }
+
+    public void PatrolUpdate()
+    {
+        if (isWaiting)
+        {
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0f)
+            {
+                isWaiting = false;
+                whichPatrolPoint = (whichPatrolPoint + 1) % patrolPoints.Length;
+                moveScript.RouteCalculator(patrolPoints[whichPatrolPoint].position);
+            }
+            return;
+        }
+
+        if (patrolPoints.Length == 0)
+        {
+            return;
+        }
+
+        if (moveScript.HasFinishedPath() == true)
+        {
+            StartWaiting();
+        }
+    }
+
+   
 }
 

@@ -1084,6 +1084,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Player '
       objectReference: {fileID: 0}
+    - target: {fileID: 2279424768714368847, guid: cc436c9ab9482f243875e13d36b6d232, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 2885725659843853828, guid: cc436c9ab9482f243875e13d36b6d232, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7882868235755356794, guid: cc436c9ab9482f243875e13d36b6d232, type: 3}
       propertyPath: m_LocalPosition.x
       value: 456.41748
@@ -1759,6 +1767,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1283017171755564, guid: f10c394033f254647873f3d28a75a062, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1656413609}
+    - targetCorrespondingSourceObject: {fileID: 1283017171755564, guid: f10c394033f254647873f3d28a75a062, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1656413613}
   m_SourcePrefab: {fileID: 100100000, guid: f10c394033f254647873f3d28a75a062, type: 3}
 --- !u!1 &507716444
 GameObject:
@@ -6249,8 +6260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCornerIndex: 0
-  MovementSpeed: 2.5
-  TurnSpeed: 180
+  MovementSpeed: 2
+  TurnSpeed: 150
 --- !u!114 &1656413609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6266,7 +6277,25 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 507716445}
   - {fileID: 488775304}
-  waitDuration: 3
+  waitDuration: 2
+  viewDistance: 100
+  halfViewAngle: 45
+--- !u!114 &1656413613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656413602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ea375c73fbac241a2cbc112e4a5d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 50
+  flashRenderer: {fileID: 0}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.1
 --- !u!1 &1697326715 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4738f19dd27cba949bf1627ab0a7baa1, type: 3}
