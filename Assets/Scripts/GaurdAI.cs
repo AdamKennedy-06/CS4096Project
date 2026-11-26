@@ -15,7 +15,11 @@ public class GaurdAI : MonoBehaviour
     private GameObject player;
     private Transform playerPos;
     private bool visable = false;
-    enum EnemyState
+    public float routeInterval = 0.3f;
+    private float countdown;
+    public float searchTime = 4f;
+    private float lostTimer;
+    public enum EnemyState
     {
         Patrol,
         Chase
@@ -99,7 +103,7 @@ public class GaurdAI : MonoBehaviour
                 break;
 
             case EnemyState.Chase:
-               
+                ChaseUpdate();
                 break;
 
             /*case EnemyState.Attack:
@@ -145,6 +149,13 @@ public class GaurdAI : MonoBehaviour
 
     public void PatrolUpdate()
     {
+        if (HasLineOfSight() == true)
+        {
+            StateChange(EnemyState.Chase);
+            return;
+        }
+        
+
         if (isWaiting)
         {
             waitTimer -= Time.deltaTime;
@@ -165,6 +176,25 @@ public class GaurdAI : MonoBehaviour
         if (moveScript.HasFinishedPath() == true)
         {
             StartWaiting();
+        }
+    }
+
+    public void StateChange(EnemyState newState)
+    {
+        Debug.Log("State Changed " + newState);
+        currentState = newState;
+        isWaiting = false;
+
+
+    }
+
+    public void ChaseUpdate()
+    {
+       countdown = countdown - Time.deltaTime ;
+        if (countdown <= 0f)
+        {
+            moveScript.RouteCalculator(playerPos.position);
+            countdown = routeInterval;
         }
     }
 
