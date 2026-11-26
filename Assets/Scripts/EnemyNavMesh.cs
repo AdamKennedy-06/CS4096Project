@@ -10,6 +10,7 @@ public class EnemyNavMesh : MonoBehaviour
     public float MovementSpeed = 2.5f;
     private NavMeshPath myCustomPath;
     public float TurnSpeed = 180f;
+   
 
 
     // Start is called before the first frame update

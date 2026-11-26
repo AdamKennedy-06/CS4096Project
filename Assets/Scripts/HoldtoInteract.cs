@@ -8,17 +8,14 @@ public class HoldToInteract : MonoBehaviour
 {
     public GameObject interactionCanvas;
     public Image progressCircleImage;
-    public string levelToLoad; 
+    public string levelToLoad;
 
-
-    void Start()
-    {
-      
-    }
+    private bool isPlayerInRange = false;
 
     void Update()
     {
-        if (interactionCanvas.activeSelf)
+        // Only run if the player is inside THIS specific trigger
+        if (isPlayerInRange)
         {
             if (Input.GetKey(KeyCode.E))
             {
@@ -29,9 +26,11 @@ public class HoldToInteract : MonoBehaviour
                 progressCircleImage.fillAmount = 0f;
             }
 
-          
             if (progressCircleImage.fillAmount >= 1f)
             {
+                // Reset fill and prevent multiple load calls
+                isPlayerInRange = false;
+                progressCircleImage.fillAmount = 0f;
                 SceneManager.LoadScene(levelToLoad);
             }
         }
@@ -41,6 +40,7 @@ public class HoldToInteract : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            isPlayerInRange = true;
             if (interactionCanvas != null) interactionCanvas.SetActive(true);
         }
     }
@@ -49,8 +49,9 @@ public class HoldToInteract : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            isPlayerInRange = false;
             if (interactionCanvas != null) interactionCanvas.SetActive(false);
-            progressCircleImage.fillAmount = 0f;
+            if (progressCircleImage != null) progressCircleImage.fillAmount = 0f;
         }
     }
 }

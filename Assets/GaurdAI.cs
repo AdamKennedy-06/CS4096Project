@@ -10,7 +10,11 @@ public class GaurdAI : MonoBehaviour
     public float waitDuration = 3f;
     private bool isWaiting = false;
     private float waitTimer = 0f;
-
+    public float viewDistance = 10f;
+    public float halfViewAngle = 45f;
+    private GameObject player;
+    private Transform playerPos;
+    private bool visable = false;
     void Awake()
     {
         moveScript = GetComponent<EnemyNavMesh>();
@@ -18,6 +22,13 @@ public class GaurdAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindWithTag("Player");
+        if(player == null){
+            Debug.Log("Player Game Object not found with tag Player");
+            return;
+        }
+        playerPos = player.transform;
+
         if (patrolPoints.Length == 0)
         {
             return;
@@ -36,6 +47,22 @@ public class GaurdAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool newAnswer = HasLineOfSight();
+
+        if (newAnswer != visable)
+        {
+            if (newAnswer)
+            {
+                Debug.Log("Player spotted");
+            }
+            else
+            {
+                Debug.Log("Player lost");
+            }
+        }
+
+        visable = newAnswer;
+
         if (isWaiting)
         {
             waitTimer -= Time.deltaTime;
@@ -57,7 +84,37 @@ public class GaurdAI : MonoBehaviour
         {
             StartWaiting();
         }
+
+
+       
+            
+
+       
+      
         
+                
+
+    }
+
+    public bool HasLineOfSight()
+    {
+        Vector3 playerTarget = playerPos.position;
+        Vector3 direction = playerTarget - transform.position;
+        direction.y = 0;
+
+        if (Vector3.Distance(transform.position, playerTarget) > viewDistance)
+        {
+            return false;
+        }
+
+            
+        if (Vector3.Angle(transform.forward, direction) > halfViewAngle)
+        {
+
+            return false;
+        }
+
+        return true;
 
     }
 }
