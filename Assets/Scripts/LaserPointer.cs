@@ -19,7 +19,7 @@ public class LaserPointer : MonoBehaviour
         line.useWorldSpace = true;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         Vector3 start = firePoint.position;
         Vector3 end = start + firePoint.forward * maxDistance;

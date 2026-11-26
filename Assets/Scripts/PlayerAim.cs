@@ -12,7 +12,7 @@ public class PlayerAim : MonoBehaviour
         if (cam == null) cam = Camera.main;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         
         Plane aimPlane = new Plane(Vector3.up, transform.position);
