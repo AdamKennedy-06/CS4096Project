@@ -183,6 +183,11 @@ public class GaurdAI : MonoBehaviour
     {
         Debug.Log("State Changed " + newState);
         currentState = newState;
+        if (newState == EnemyState.Chase)
+        {
+            countdown = 0;
+            lostTimer = searchTime;
+        }
         isWaiting = false;
 
 
@@ -190,12 +195,27 @@ public class GaurdAI : MonoBehaviour
 
     public void ChaseUpdate()
     {
-       countdown = countdown - Time.deltaTime ;
+        if (visable == true)
+        {
+            lostTimer = searchTime;
+        }
+        else
+        {
+            searchTime = Time.deltaTime - lostTimer;
+        }
+
+        if (lostTimer <= 0)
+        {
+            StateChange(EnemyState.Patrol);
+        }
+        countdown = countdown - Time.deltaTime ;
         if (countdown <= 0f)
         {
             moveScript.RouteCalculator(playerPos.position);
             countdown = routeInterval;
         }
+       
+
     }
 
    
