@@ -86,6 +86,8 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private float stunTimer;
+        private bool isStunned;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -134,6 +136,17 @@ namespace StarterAssets
 
         private void Start()
         {
+            if(isStunned == true)
+            {
+                stunTimer = stunTimer - Time.deltaTime;
+                return;
+            }
+
+            if (stunTimer <= 0f)
+            {
+                isStunned = false;
+            }
+
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -388,5 +401,12 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+        public void ApplyStun(float duration)
+        {
+             stunTimer = duration;
+            isStunned = true;
+        }
     }
+
+   
 }
