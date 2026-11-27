@@ -135,18 +135,7 @@ namespace StarterAssets
         }
 
         private void Start()
-        {
-            if(isStunned == true)
-            {
-                stunTimer = stunTimer - Time.deltaTime;
-                return;
-            }
-
-            if (stunTimer <= 0f)
-            {
-                isStunned = false;
-            }
-
+        { 
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -167,6 +156,18 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (isStunned == true)
+            {
+                stunTimer = stunTimer - Time.deltaTime;
+                if (stunTimer <= 0f)
+                {
+                    isStunned = false;
+                }
+                return;
+            }
+
+            
+
             _hasAnimator = TryGetComponent(out _animator);
 
             JumpAndGravity();
