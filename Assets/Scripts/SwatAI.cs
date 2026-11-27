@@ -19,6 +19,11 @@ public class SwatAI : MonoBehaviour
     [SerializeField] private float turnSpeed = 8f;
     [SerializeField] private LayerMask sightBlockers = ~0;
 
+
+    [SerializeField] private float comRadius = 20f;
+    private bool hasCalledBackup = false;
+    
+
     private UnityEngine.AI.NavMeshAgent agent;
     private Transform player;
     private float spottedTime = -1f;
@@ -36,12 +41,18 @@ public class SwatAI : MonoBehaviour
     }
     private void Start()
     {
+        
+
         GameObject p = GameObject.FindGameObjectWithTag("Player");
         if (p != null) player = p.transform;
         
     }
+
+   
+
     private void Update()
     {
+        
        if(player == null)
         {
             if (wasChasing)
@@ -71,6 +82,12 @@ public class SwatAI : MonoBehaviour
         wasChasing = true;
         agent.updateRotation = false;
 
+        if (!hasCalledBackup)
+        {
+            CallBackup();
+            hasCalledBackup = true;
+        }
+
         if (spottedTime < 0f)
             spottedTime = Time.time;
         FacePlayer();
@@ -92,6 +109,31 @@ public class SwatAI : MonoBehaviour
             TryShoot();
         }
     }
+
+
+    private void CallBackup()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, comRadius);
+        
+        foreach(var hitCollider in hitColliders)
+        {
+            if(hitCollider.TryGetComponent(out SwatAI otherSwat) && otherSwat != this)
+            {
+                otherSwat.ReceiveBackupCall();
+            }
+        }
+    }
+    public void ReceiveBackupCall()
+    {
+        if (!wasChasing)
+        {
+            wasChasing = true;
+            hasCalledBackup = true;
+            agent.isStopped = false;
+            agent.SetDestination(player.position);
+        }
+    }
+
 
     private void Patrol()
     {
@@ -148,6 +190,14 @@ public class SwatAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sightRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, shootRange);
+    }
+
+    public void SetShieldState(bool shieldUp)
+    {
+        if (shieldUp)
+        {
+            agent.speed = moveSpeed * 0.5f;
+        }
     }
 
 }

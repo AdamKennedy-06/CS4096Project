@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    void TakeDamage(float amount);
+    void TakeDamage(float amount, Vector3 hitDirection);
 }
 
 [RequireComponent(typeof(Rigidbody))]
@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
     {
         if(collision.collider.TryGetComponent(out IDamageable target))
         {
-            target.TakeDamage(damage);
+            target.TakeDamage(damage, transform.forward);
         }
         Destroy(gameObject);
     }
