@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StarterAssets;
 
 public class GaurdAI : MonoBehaviour
 {
@@ -19,10 +20,21 @@ public class GaurdAI : MonoBehaviour
     private float countdown;
     public float searchTime = 4f;
     private float lostTimer;
+    public float atkRange = 1.9f;
+    public float atkCooldown = 1.2f;
+    private float atkTimer;
+    public float atkDamage = 10f;
+    private IDamageable PlayerHealth;
+    private ThirdPersonController playerController;
+    [SerializeField] private float stunDuration = 0f;
+    public Bullet taser;
+    public Transform firePoint;
+    public float boltspeed;
     public enum EnemyState
     {
         Patrol,
-        Chase
+        Chase,
+        Attack
     }
 
     EnemyState currentState = EnemyState.Patrol;
@@ -33,6 +45,8 @@ public class GaurdAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      
+
         player = GameObject.FindWithTag("Player");
         if (player == null)
         {
@@ -40,6 +54,8 @@ public class GaurdAI : MonoBehaviour
             return;
         }
         playerPos = player.transform;
+        PlayerHealth = player.GetComponent<PlayerHealth>();
+        playerController = player.GetComponent<ThirdPersonController>();
 
         if (patrolPoints.Length == 0)
         {
@@ -109,9 +125,9 @@ public class GaurdAI : MonoBehaviour
                 ChaseUpdate();
                 break;
 
-                /*case EnemyState.Attack:
-
-                    break; */
+                case EnemyState.Attack:
+                AttackUpdate();
+                    break;
         }
 
 
@@ -212,7 +228,14 @@ public class GaurdAI : MonoBehaviour
                 moveScript.RouteCalculator(patrolPoints[whichPatrolPoint].position);
             }
         }
-            isWaiting = false;
+        if (newState == EnemyState.Attack)
+        {
+            atkTimer = 0f;
+            moveScript.StopMovement();
+
+        }
+
+        isWaiting = false;
 
 
     }
@@ -240,7 +263,47 @@ public class GaurdAI : MonoBehaviour
             countdown = routeInterval;
         }
 
+        
+        float dist = Vector3.Distance(playerPos.position, transform.position);
+        if (visable == true && dist <= atkRange)
+        {
+            StateChange(EnemyState.Attack);
+        }
 
+
+    }
+
+    public void AttackUpdate()
+    {
+        float dist = Vector3.Distance(playerPos.position, transform.position);
+        if (dist > atkRange || visable == false)
+        {
+            StateChange(EnemyState.Chase);
+            return;
+        }
+        moveScript.RotationCheck(playerPos.position);
+        atkTimer = atkTimer - Time.deltaTime;
+        if (atkTimer <= 0f)
+        {
+            atkTimer = atkCooldown;
+            if (PlayerHealth != null)
+            {
+                PlayerHealth.TakeDamage(atkDamage);
+                if(stunDuration > 0f && playerController != null)
+                {
+                    if (taser != null && firePoint != null)
+                    {
+                        Bullet bolt = Instantiate(taser, firePoint.position, firePoint.rotation);
+                        bolt.Launch(boltspeed, 0f);
+
+                    }
+                    playerController.ApplyStun(stunDuration);
+                    Debug.Log("Police Stun!!");
+                }
+            }
+            Debug.Log("Cop Attacks!!");
+        }
+       
     }
 
 

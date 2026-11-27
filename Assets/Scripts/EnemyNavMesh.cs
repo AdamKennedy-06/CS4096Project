@@ -104,5 +104,11 @@ public class EnemyNavMesh : MonoBehaviour
         return false;
         
     }
+
+    public void StopMovement()
+    {
+        myCustomPath = null;
+        currentCornerIndex = 0;
+    }
 }
 
