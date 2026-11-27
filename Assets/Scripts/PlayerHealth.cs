@@ -24,7 +24,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (flashRenderer == null) flashRenderer = GetComponentInChildren<Renderer>();
         if (flashRenderer != null) originalColor = flashRenderer.material.color;
     }
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Vector3 hitDirection)
     {
         if (damage <= 0 || currentHealth <= 0) return;
 

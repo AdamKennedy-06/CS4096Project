@@ -288,7 +288,7 @@ public class GaurdAI : MonoBehaviour
             atkTimer = atkCooldown;
             if (PlayerHealth != null)
             {
-                PlayerHealth.TakeDamage(atkDamage);
+                PlayerHealth.TakeDamage(atkDamage, Vector3.zero);
                 if(stunDuration > 0f && playerController != null)
                 {
                     if (taser != null && firePoint != null)
